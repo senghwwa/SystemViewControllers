@@ -84,6 +84,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         mailComposer.setToRecipients(["example@example.com"])
         mailComposer.setSubject("Look at this")
         mailComposer.setMessageBody("Hello. This is a sample message", isHTML: false)
+        let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 1.0)! as NSData
+        mailComposer.addAttachmentData(imageData as Data, mimeType: "jpeg", fileName: "image.jpeg")
         present(mailComposer, animated: true, completion: nil)
     }
     
