@@ -10,18 +10,17 @@ import UIKit
 import SafariServices
 import MessageUI
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate {
+    
 
     @IBOutlet weak var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     @IBAction func shareButtonTapped(_ sender: Any) {
@@ -72,24 +71,53 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func emailButtonTapped(_ sender: Any) {
-        if !MFMailComposeViewController.canSendMail() {
-            print("Cannot send mail")
+        
+        let alertController = UIAlertController(title: "Choose Messaging Option", message: nil, preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+        if MFMailComposeViewController.canSendMail() {
+            guard MFMailComposeViewController.canSendMail() else {return}
+            
+            let mailComposer = MFMailComposeViewController()
+            mailComposer.mailComposeDelegate = self
+            let mailComposerAction = UIAlertAction(title: "Compose email", style: .default, handler: {action in
+                mailComposer.setToRecipients(["example@example.com"])
+                mailComposer.setSubject("Look at this")
+                mailComposer.setMessageBody("Hello. This is a sample message", isHTML: false)
+                let imageData: NSData = UIImageJPEGRepresentation(self.imageView.image!, 1.0)! as NSData
+                mailComposer.addAttachmentData(imageData as Data, mimeType: "jpeg", fileName: "image.jpeg")
+                self.present(mailComposer, animated: true, completion: nil)})
+            alertController.addAction(mailComposerAction)
         }
         
-        guard MFMailComposeViewController.canSendMail() else {return}
+        if MFMessageComposeViewController.canSendText() {
+            guard MFMessageComposeViewController.canSendText() else {return}
+            
+            let messageComposer = MFMessageComposeViewController()
+            messageComposer.messageComposeDelegate = self
+            let messageComposerAction = UIAlertAction(title: "Compose message", style: .default, handler: {action in
+                messageComposer.recipients = ["0123456789"]
+                messageComposer.body = ("Body of message")
+                let imageData: NSData = UIImageJPEGRepresentation(self.imageView.image!, 1.0)! as NSData
+                messageComposer.addAttachmentData(imageData as Data, typeIdentifier: "jpeg", filename: "image.jpeg")
+                
+                self.present(messageComposer, animated: true, completion: nil)})
+            
+            alertController.addAction(messageComposerAction)
+        }
         
-        let mailComposer = MFMailComposeViewController()
-        mailComposer.mailComposeDelegate = self
+        alertController.addAction(cancelAction)
+        alertController.popoverPresentationController?.sourceView = sender as? UIView
         
-        mailComposer.setToRecipients(["example@example.com"])
-        mailComposer.setSubject("Look at this")
-        mailComposer.setMessageBody("Hello. This is a sample message", isHTML: false)
-        let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 1.0)! as NSData
-        mailComposer.addAttachmentData(imageData as Data, mimeType: "jpeg", fileName: "image.jpeg")
-        present(mailComposer, animated: true, completion: nil)
-    }
+        present(alertController, animated: true, completion: nil)
+        
+     }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
         dismiss(animated: true, completion: nil)
     }
     

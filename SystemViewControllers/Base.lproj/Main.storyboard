@@ -47,14 +47,14 @@
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TN0-vP-KLc">
                                                 <rect key="frame" x="150" y="0.0" width="75" height="30"/>
-                                                <state key="normal" title="Camera"/>
+                                                <state key="normal" title="Image"/>
                                                 <connections>
                                                     <action selector="cameraButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="H5b-ZB-6ZE"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MMu-Fq-mzm">
                                                 <rect key="frame" x="225" y="0.0" width="75" height="30"/>
-                                                <state key="normal" title="Email"/>
+                                                <state key="normal" title="Message"/>
                                                 <connections>
                                                     <action selector="emailButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MJF-D8-NrH"/>
                                                 </connections>
